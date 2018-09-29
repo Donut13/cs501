@@ -8,6 +8,7 @@ def create_app():
         app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLALCHEMY_DATABASE_URI']
     else:
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../development.db'
+    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
     from .models import db, init_db
     db.init_app(app)
