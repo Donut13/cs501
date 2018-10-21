@@ -43,7 +43,7 @@ class Action(db.Model):
     user = db.relationship('User')
     item_id = db.Column(db.Integer, db.ForeignKey('item.id'), nullable=False)
     item = db.relationship('Item')
-    picture = db.Column(db.LargeBinary)
+    picture = db.deferred(db.Column(db.LargeBinary))
 
     def __repr__(self):
         return '<Action id={!r} type={!r} time={!r}>'.format(self.id, self.type, self.time)

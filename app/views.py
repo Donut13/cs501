@@ -1,6 +1,6 @@
 from .models import db, Fridge, Item, Action, User
 from datetime import datetime
-from flask import Blueprint, request, jsonify, abort, send_file
+from flask import Blueprint, request, jsonify, abort, send_file, render_template, redirect
 import io
 
 root = Blueprint('root', __name__)
@@ -11,13 +11,18 @@ def _authenticate(user):
 
 @root.route('/fridges', methods=['GET'])
 def fridges():
-    return jsonify([{'fridge_id': fridge.id} for fridge in Fridge.query.all()])
+    fridges = Fridge.query.all()
+    if request.accept_mimetypes.accept_html:
+        return render_template('fridges.html', fridges=fridges)
+    return jsonify([{'fridge_id': fridge.id} for fridge in fridges])
 
 @root.route('/fridges/<int:fridge_id>/items', methods=['GET', 'POST'])
 def fridge_items(fridge_id):
     if request.method == 'GET':
-        return jsonify([{'id': item.id, 'name': item.name}
-                        for item in Fridge.query.get(fridge_id).items])
+        items = Fridge.query.get(fridge_id).items
+        if request.accept_mimetypes.accept_html:
+            return render_template('items.html', items=items)
+        return jsonify([{'id': item.id, 'name': item.name} for item in items])
     else:
         assert request.method == 'POST'
         user = request.json['user']
@@ -30,6 +35,25 @@ def fridge_items(fridge_id):
         db.session.add(action)
         db.session.commit()
         return jsonify({'action_id': action.id})
+
+@root.route('/fridges/<int:fridge_id>/actions', methods=['GET'])
+def fridge_actions(fridge_id):
+    actions = [
+        {
+            'id': action.id,
+            'type': action.type.name,
+            'user': action.user.name,
+            'item': action.item.name,
+            'time': action.time,
+            'has_picture': has_picture,
+        }
+        for action, has_picture in db.session.query(
+            Action, Action.picture != None
+        ).join(Action.item).filter(
+            Item.fridge_id == fridge_id
+        ).order_by(Action.time.desc()).all()
+    ]
+    return render_template('actions.html', actions=actions)
 
 @root.route('/items/<int:item_id>', methods=['DELETE'])
 def item(item_id):
@@ -59,4 +83,4 @@ def action_picture(action_id):
 
 @root.route('/', methods=['GET'])
 def index():
-    return 'index'
+    return redirect('/fridges')

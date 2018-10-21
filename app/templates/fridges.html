@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Fridges{% endblock %}
+
+{% block content %}
+<ul>
+  {% for fridge in fridges %}
+  <li>
+    ID {{ fridge.id }}:
+    <a href="/fridges/{{ fridge.id }}/items">items</a>
+    <a href="/fridges/{{ fridge.id }}/actions">history</a>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

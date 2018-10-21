@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Actions{% endblock %}
+
+{% block content %}
+<style>
+table, th, td {
+  border: 1px solid black;
+}
+</style>
+<table>
+  <tr>
+    <th>Type</th>
+    <th>User</th>
+    <th>Item</th>
+    <th>Time</th>
+    <th>Picture</th>
+  </tr>
+  {% for action in actions %}
+  <tr>
+    <td>{{ action['type'] }}</td>
+    <td>{{ action['user'] }}</td>
+    <td>{{ action['item'] }}</td>
+    <td>{{ action['time'] }}</td>
+    <td>
+      {% if action['has_picture'] %}
+      <a href="/actions/{{ action['id'] }}/picture">link</a>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
