@@ -1,0 +1,87 @@
+swagger: "2.0"
+
+info:
+  title: "Community Fridge"
+
+paths:
+  /fridges/{fridge_id}/items:
+    get:
+      summary: "List all items in a fridge"
+      parameters:
+        - name: fridge_id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+    post:
+      summary: "Put a new item to the fridge"
+      parameters:
+        - name: fridge_id
+          in: path
+          required: true
+          type: integer
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              user:
+                $ref: "#/definitions/User"
+              item_name:
+                type: string
+      responses:
+        200:
+          schema:
+            type: object
+            properties:
+              action_id:
+                type: integer
+  /items/{item_id}:
+    delete:
+      summary: "Get an item from the fridge"
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          type: integer
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              user:
+                $ref: "#/definitions/User"
+  /actions/{action_id}/picture:
+    put:
+      summary: "Upload picture for an action"
+      parameters:
+        - name: action_id
+          in: path
+          required: true
+          type: integer
+        - name: picture
+          in: formData
+          required: true
+          type: file
+          description: "The picture in JPEG format"
+
+definitions:
+  User:
+    type: object
+    properties:
+      name:
+        type: string
+      password:
+        type: string
