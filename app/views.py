@@ -64,7 +64,7 @@ def item(item_id):
     db.session.add(action)
     db.session.delete(Item.query.get(item_id))
     db.session.commit()
-    return ('', 204)
+    return jsonify({'action_id': action.id})
 
 @root.route('/actions/<int:action_id>/picture', methods=['GET', 'PUT'])
 def action_picture(action_id):
