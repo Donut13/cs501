@@ -1,6 +1,7 @@
 from .models import db, Fridge, Item, Action, User
 from datetime import datetime
 from flask import Blueprint, request, jsonify, abort, send_file, render_template, redirect
+import base64
 import io
 
 root = Blueprint('root', __name__)
@@ -70,12 +71,8 @@ def item(item_id):
 def action_picture(action_id):
     action = Action.query.get(action_id)
     if request.method == 'PUT':
-        picture = request.files['picture']
-        try:
-            action.picture = picture.read()
-            db.session.commit()
-        finally:
-            picture.close()
+        action.picture = base64.decodebytes(bytes(request.data))
+        db.session.commit()
         return ('', 204)
     else:
         assert request.method == 'GET'

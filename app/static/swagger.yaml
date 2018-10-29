@@ -72,16 +72,18 @@ paths:
     put:
       summary: "Upload picture for an action"
       description: ""
+      consumes:
+        - image/jpeg
       parameters:
         - name: action_id
           in: path
           required: true
           type: integer
-        - name: picture
-          in: formData
+        - name: body
+          in: body
           required: true
-          type: file
-          description: "The picture in JPEG format"
+          type: string
+          description: "The picture in JPEG format encoded in Base64"
       responses:
         204:
           description: No Content
