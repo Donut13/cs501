@@ -5,6 +5,23 @@ info:
   version: 0.1.0
 
 paths:
+  /fridges:
+    get:
+      summary: "List all fridges, optionally sort by distance to a location"
+      parameters:
+        - name: latitude
+          in: query
+          type: number
+        - name: longitude
+          in: query
+          type: number
+      responses:
+        200:
+          schema:
+            type: object
+            properties:
+              fridge_id:
+                type: integer
   /fridges/{fridge_id}/items:
     get:
       summary: "List all items in a fridge"

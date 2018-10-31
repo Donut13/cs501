@@ -1,5 +1,6 @@
 from .models import db, Fridge, Item, Action
 from datetime import datetime
+from math import radians, sin, cos, atan2, sqrt
 from flask import Blueprint, request, jsonify, send_file, render_template, redirect
 import base64
 import io
@@ -9,9 +10,26 @@ root = Blueprint('root', __name__)
 def _authenticate(user):
     pass
 
+def _distance(phi1, lambda1, phi2, lambda2):
+    """
+    Distance between 2 geographic coordinate points given in radians
+    Reference: https://www.movable-type.co.uk/scripts/latlong.html
+    """
+    R = 6371e3
+    a = sin(abs(phi1 - phi2) / 2) ** 2 + cos(phi1) * cos(phi2) * sin(abs(lambda1 - lambda2) / 2) ** 2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    return R * c
+
 @root.route('/fridges', methods=['GET'])
 def fridges():
+    latitude = request.args.get('latitude')
+    longitude = request.args.get('longitude')
     fridges = Fridge.query.all()
+    if latitude is not None and longitude is not None:
+        latitude = float(latitude)
+        longitude = float(longitude)
+        fridges.sort(key=lambda f: _distance(radians(latitude), radians(longitude),
+                                             radians(f.latitude), radians(f.longitude)))
     if request.accept_mimetypes.accept_html:
         return render_template('fridges.html', fridges=fridges)
     return jsonify([{'fridge_id': fridge.id} for fridge in fridges])

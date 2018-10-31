@@ -6,7 +6,7 @@
 <ul>
   {% for fridge in fridges %}
   <li>
-    ID {{ fridge.id }}:
+    ID {{ fridge.id }}: ({{ fridge.latitude }}, {{ fridge.longitude }})
     <a href="/fridges/{{ fridge.id }}/items">items</a>
     <a href="/fridges/{{ fridge.id }}/actions">history</a>
   </li>

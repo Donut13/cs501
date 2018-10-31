@@ -16,6 +16,8 @@ class User(db.Model):
 class Fridge(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
+    latitude = db.Column(db.Float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
 
     def __repr__(self):
         return '<Fridge id={!r}>'.format(self.id)
@@ -52,9 +54,9 @@ class Action(db.Model):
 @with_appcontext
 def init_db():
     db.create_all()
-    user = User(name='qianwang', password='424242')
-    db.session.add(user)
-    fridge = Fridge()
+    fridge = Fridge(latitude=45.473873, longitude=-73.610439)
+    db.session.add(fridge)
+    fridge = Fridge(latitude=45.364589, longitude=-71.846603)
     db.session.add(fridge)
     db.session.commit()
     click.echo('Initialized DB')
