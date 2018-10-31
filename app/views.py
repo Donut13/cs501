@@ -1,14 +1,13 @@
-from .models import db, Fridge, Item, Action, User
+from .models import db, Fridge, Item, Action
 from datetime import datetime
-from flask import Blueprint, request, jsonify, abort, send_file, render_template, redirect
+from flask import Blueprint, request, jsonify, send_file, render_template, redirect
 import base64
 import io
 
 root = Blueprint('root', __name__)
 
 def _authenticate(user):
-    u = User.query.get(user['name'])
-    if u is None or u.password != user['password']: abort(401)
+    pass
 
 @root.route('/fridges', methods=['GET'])
 def fridges():
