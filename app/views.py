@@ -88,7 +88,11 @@ def item(item_id):
 def action_picture(action_id):
     action = Action.query.get(action_id)
     if request.method == 'PUT':
-        action.picture = base64.decodebytes(bytes(request.data))
+        data = request.data
+        missing_padding = len(data) % 4
+        if missing_padding > 0:
+            data += b'=' * (4 - missing_padding)
+        action.picture = base64.decodebytes(data)
         db.session.commit()
         return ('', 204)
     else:
