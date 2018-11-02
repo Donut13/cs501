@@ -60,7 +60,7 @@ def fridge_actions(fridge_id):
         {
             'id': action.id,
             'type': action.type.name,
-            'user': action.user.name,
+            'user': action.user_name,
             'item': action.item.name,
             'time': action.time,
             'has_picture': has_picture,

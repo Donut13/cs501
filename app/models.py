@@ -41,8 +41,7 @@ class Action(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.Enum(Type), nullable=False)
     time = db.Column(db.DateTime, nullable=False) # UTC time zone
-    user_name = db.Column(db.String(64), db.ForeignKey('user.name'), nullable=False)
-    user = db.relationship('User')
+    user_name = db.Column(db.String(64), nullable=False)
     item_id = db.Column(db.Integer, db.ForeignKey('item.id'), nullable=False)
     item = db.relationship('Item')
     picture = db.deferred(db.Column(db.LargeBinary))
