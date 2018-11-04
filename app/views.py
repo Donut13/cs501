@@ -37,7 +37,7 @@ def fridges():
 @root.route('/fridges/<int:fridge_id>/items', methods=['GET', 'POST'])
 def fridge_items(fridge_id):
     if request.method == 'GET':
-        items = Fridge.query.get(fridge_id).items
+        items = db.session.query(Item).filter(Item.deleted.is_(False))
         if request.accept_mimetypes.accept_html:
             return render_template('items.html', items=items)
         return jsonify([{'id': item.id, 'name': item.name} for item in items])
@@ -80,7 +80,7 @@ def item(item_id):
     action = Action(type=Action.Type.GET, time=datetime.utcnow(),
                     user_name=user['name'], item_id=item_id)
     db.session.add(action)
-    db.session.delete(Item.query.get(item_id))
+    Item.query.get(item_id).deleted = True
     db.session.commit()
     return jsonify({'action_id': action.id})
 

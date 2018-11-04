@@ -28,6 +28,7 @@ class Item(db.Model):
     name = db.Column(db.String(64), nullable=False)
     fridge_id = db.Column(db.Integer, db.ForeignKey('fridge.id'), nullable=False)
     fridge = db.relationship('Fridge', backref=db.backref('items', lazy=True))
+    deleted = db.Column(db.Boolean, nullable=False, default=False)
 
     def __repr__(self):
         return '<Item id={!r} name={!r}>'.format(self.id, self.name)
